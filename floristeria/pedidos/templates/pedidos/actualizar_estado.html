@@ -1,26 +1,65 @@
-<!DOCTYPE html>
-<html>
 {% extends 'pedidos/base.html' %}
-<head>
-    <title>{% block title %}Actualizar Estado de Pedido{% endblock %}</title>
-</head>
-{% block content %}
-<body>
-    <h1>Actualizar Estado de Pedido</h1>
-    <p>Cliente: {{ pedido.cliente }}</p>
-    <p>Estado actual: {{ pedido.estado }}</p>
+{% block title %}Actualizar Estado Pedido{% endblock %}
 
-    <form method="post">
-        {% csrf_token %}
-        <select name="estado">
-            {% for key, value in estados %}
-                <option value="{{ key }}" {% if pedido.estado == key %}selected{% endif %}>
-                    {{ value }}
+{% block content %}
+<div style="display:flex; gap: 40px; align-items:flex-start; flex-wrap: wrap;">
+
+    <!-- Lista de pedidos -->
+    <div style="flex:1; min-width:300px; background-color:#f7e1ea; padding:20px; border-radius:12px; box-shadow:0 4px 8px rgba(0,0,0,0.1);">
+        <h2 style="text-align:center; color:#cc8fa6; margin-bottom:15px;">Pedidos Activos</h2>
+        <table style="width:100%; border-collapse:collapse; background-color:white; border-radius:8px; overflow:hidden;">
+            <thead style="background-color:#fcd5e2;">
+                <tr>
+                    <th style="padding:10px; text-align:center;">ID</th>
+                    <th style="padding:10px; text-align:center;">Cliente</th>
+                    <th style="padding:10px; text-align:center;">Estado</th>
+                    <th style="padding:10px; text-align:center;">Seleccionar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in pedidos %}
+                <tr style="text-align:center; border-bottom:1px solid #eee;">
+                    <td>{{ pedido.id }}</td>
+                    <td>{{ pedido.cliente.nombre }}</td>
+                    <td>{{ pedido.get_estado_display }}</td>
+                    <td>
+                        <a href="?pedido={{ pedido.id }}" style="
+                            background-color:#cc8fa6; color:white; text-decoration:none;
+                            padding:5px 10px; border-radius:20px; font-weight:bold;
+                        ">Editar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="padding:10px; text-align:center;">No hay pedidos</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Formulario de actualización de estado -->
+    {% if pedido_seleccionado %}
+    <div style="flex:1; min-width:250px; background-color:#f7e1ea; padding:20px; border-radius:12px; box-shadow:0 4px 8px rgba(0,0,0,0.1);">
+        <h2 style="text-align:center; color:#cc8fa6; margin-bottom:15px;">Actualizar Estado Pedido {{ pedido_seleccionado.id }}</h2>
+        <form method="post" style="display:flex; flex-direction:column; gap:15px;">
+            {% csrf_token %}
+            <input type="hidden" name="pedido_id" value="{{ pedido_seleccionado.id }}">
+            <label for="estado" style="font-weight:bold;">Estado:</label>
+            <select name="estado" id="estado" style="padding:8px; border-radius:6px; border:1px solid #ccc;">
+                {% for key, label in estados %}
+                <option value="{{ key }}" {% if key == pedido_seleccionado.estado %}selected{% endif %}>
+                    {{ label }}
                 </option>
-            {% endfor %}
-        </select>
-        <button type="submit">Actualizar</button>
-    </form>
-</body>
+                {% endfor %}
+            </select>
+            <button type="submit" style="
+                background-color:#cc8fa6; color:white; border:none;
+                border-radius:25px; padding:10px; font-weight:bold; cursor:pointer;
+            ">Actualizar</button>
+        </form>
+    </div>
+    {% endif %}
+
+</div>
 {% endblock %}
-</html>

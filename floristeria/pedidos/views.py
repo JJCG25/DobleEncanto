@@ -44,15 +44,30 @@ def catalogo_productos(request):
     return render(request, 'pedidos/catalogo.html', {'productos': productos})
 
 # Actualizar estado de pedido
-def actualizar_estado(request, pedido_id):
-    pedido = get_object_or_404(Pedido, id=pedido_id)
+def lista_y_actualizar_pedidos(request):
+    pedidos = Pedido.objects.all().order_by('-fecha')
+    pedido_seleccionado = None
+
+    # Revisamos si se envió un POST de actualización de estado
     if request.method == 'POST':
+        pedido_id = request.POST.get('pedido_id')
         nuevo_estado = request.POST.get('estado')
+        pedido = get_object_or_404(Pedido, id=pedido_id)
         if nuevo_estado in dict(Pedido.ESTADOS):
             pedido.estado = nuevo_estado
             pedido.save()
-            return redirect('lista_pedidos')
-    return render(request, 'pedidos/actualizar_estado.html', {'pedido': pedido, 'estados': Pedido.ESTADOS})
+        # Volvemos a cargar la página con el mismo pedido seleccionado
+        pedido_seleccionado = pedido
+
+    # Si se hizo GET con query param ?pedido=ID para seleccionar uno
+    elif request.GET.get('pedido'):
+        pedido_seleccionado = get_object_or_404(Pedido, id=request.GET.get('pedido'))
+
+    return render(request, 'pedidos/actualizar_estado.html', {
+        'pedidos': pedidos,
+        'pedido_seleccionado': pedido_seleccionado,
+        'estados': Pedido.ESTADOS
+})
 
 def inicio(request):
     return render(request, 'pedidos/inicio.html')
