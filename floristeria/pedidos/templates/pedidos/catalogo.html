@@ -1,19 +1,86 @@
-<!DOCTYPE html>
-<html>
 {% extends 'pedidos/base.html' %}
-<head>
-    <title>{% block title %}Catálogo de Productos{% endblock %}</title>
-</head>
+{% block title %}Catálogo de Productos{% endblock %}
+
 {% block content %}
-<body>
-    <h1>Catálogo de Productos</h1>
-    <ul>
-        {% for producto in productos %}
-            <li>{{ producto.nombre }} - ${{ producto.precio }} - Stock: {{ producto.stock }}</li>
-        {% empty %}
-            <li>No hay productos disponibles.</li>
-        {% endfor %}
-    </ul>
-</body>
+<style>
+    /* Contenedor principal centrado con borde */
+    .catalogo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        padding: 20px;
+    }
+
+    .catalogo-borde {
+        border: 20px solid #cc8fa6; /* borde exterior rosa */
+        border-radius: 15px;
+        padding: 30px;
+        background-color: transparent; /* solo borde, fondo transparente */
+        width: 90%;
+        max-width: 900px;
+        box-sizing: border-box;
+    }
+
+    .productos-table {
+        background-color: #ffffff; /* tabla blanca */
+        border-collapse: collapse;
+        width: 100%;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        border-radius: 8px;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .productos-table th, .productos-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .productos-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    .productos-table tr:hover {
+        background-color: #f9e6f0; /* efecto hover fila */
+    }
+
+    h2 {
+        text-align: center;
+        font-family: 'Arial', sans-serif;
+        margin-bottom: 20px;
+        color: #333;
+    }
+</style>
+
+<div class="catalogo-container">
+    <div class="catalogo-borde">
+        <h2>Catálogo de Productos</h2>
+        <table class="productos-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>{{ producto.id }}</td>
+                    <td>{{ producto.nombre }}</td>
+                    <td>${{ producto.precio }}</td>
+                    <td>{{ producto.descripcion }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No hay productos disponibles</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}
-</html>

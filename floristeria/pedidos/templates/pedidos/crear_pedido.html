@@ -1,17 +1,64 @@
-<!DOCTYPE html>
-<html>
-    {% extends 'pedidos/base.html' %}
-<head>
-    <title>{% block title %}Crear Pedido{% endblock %}</title>
-</head>
+{% extends 'pedidos/base.html' %}
+{% block title %}Crear Pedido{% endblock %}
+
 {% block content %}
-<body>
-    <h1>Crear Pedido</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Crear</button>
-    </form>
-</body>
+<div style="display: flex; flex-direction: column; gap: 30px; align-items: center;">
+
+    <!-- Formulario para crear pedido -->
+    <div style="background-color: #f7e1ea; padding: 20px; border-radius: 12px; width: 400px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        <form method="post" style="display: flex; flex-direction: column; gap: 15px;">
+            {% csrf_token %}
+            <label>Producto:</label>
+            <select name="producto" style="padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
+                {% for producto in productos %}
+                <option value="{{ producto.id }}">{{ producto.nombre }} - ${{ producto.precio }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Cantidad:</label>
+            <input type="number" name="cantidad" value="1" min="1" style="padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
+
+            <button type="submit" style="
+                background-color: #cc8fa6; color: white; border: none;
+                border-radius: 25px; padding: 10px; font-weight: bold; cursor: pointer;
+            ">Crear Pedido</button>
+        </form>
+    </div>
+
+    <!-- Tabla Pedidos Activos -->
+    <div style="background-color: #cc8fa6; padding: 20px; border-radius: 12px; width: 80%; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        <h2 style="text-align:center; color:white; margin-bottom: 15px;">Pedidos Activos</h2>
+        <table style="width: 100%; border-collapse: collapse; background-color: white; border-radius: 8px; overflow: hidden;">
+            <thead style="background-color: #f7e1ea;">
+                <tr>
+                    <th style="padding: 10px; text-align:center;">ID</th>
+                    <th style="padding: 10px; text-align:center;">Cliente</th>
+                    <th style="padding: 10px; text-align:center;">Producto</th>
+                    <th style="padding: 10px; text-align:center;">Cantidad</th>
+                    <th style="padding: 10px; text-align:center;">Estado</th>
+                    <th style="padding: 10px; text-align:center;">Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in pedidos_activos %}
+                    {% for detalle in pedido.detalles.all %}
+                    <tr>
+                        <td style="padding: 8px; text-align:center;">{{ pedido.id }}</td>
+                        <td style="padding: 8px; text-align:center;">{{ pedido.cliente.nombre }}</td>
+                        <td style="padding: 8px; text-align:center;">{{ detalle.producto.nombre }}</td>
+                        <td style="padding: 8px; text-align:center;">{{ detalle.cantidad }}</td>
+                        <td style="padding: 8px; text-align:center;">{{ pedido.get_estado_display }}</td>
+                        <td style="padding: 8px; text-align:center;">{{ pedido.fecha|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="padding: 8px; text-align:center;">No hay pedidos activos.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
 {% endblock %}
-</html>
