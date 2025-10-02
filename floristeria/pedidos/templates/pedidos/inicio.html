@@ -1,0 +1,41 @@
+{% extends 'pedidos/base.html' %}
+{% block title %}Bienvenido a Floristería{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+
+<div style="
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    text-align: center;
+    overflow: visible; /* permite que la imagen se salga si tiene bordes */
+">
+    <h1 style="
+        font-family: 'Dancing Script', cursive;
+        font-size: 3.5em;
+        color: #333;
+        z-index: 2;
+        position: relative;
+        margin: 0;
+    ">
+        Flores y detalles que hablan por ti
+    </h1>
+
+    {% load static %}
+    <img src="{% static 'pedidos/matica.png' %}" alt="matica" style="
+        position: absolute;
+        right: -60px; /* ajusta para que toque el borde aunque tenga borde transparente */
+        top: 40%;
+        transform: translateY(-50%);
+        z-index: 1;
+        opacity: 0.5;
+        width: 600px;
+        display: block;
+        margin: 0;
+        padding: 0;
+    ">
+</div>
+{% endblock %}

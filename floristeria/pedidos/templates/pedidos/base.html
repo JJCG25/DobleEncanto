@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Floristería{% endblock %}</title>
+    <style>
+body {
+    display: flex;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+nav {
+    width: 200px;
+    background-color: #f5b0c9;
+    padding-top: 20px; /* solo padding arriba */
+    height: 100vh;
+    box-sizing: border-box;
+}
+nav img {
+    display: block;
+    margin: 0 auto 50px auto;
+    width: 160px;
+    height: auto;
+}
+nav a {
+    display: block;
+    padding: 10px 20px;  /* padding dentro del enlace */
+    margin-bottom: 10px; /* espacio entre enlaces */
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+    background-color: transparent; /* fondo inicial */
+    transition: background-color 0.3s;
+    box-sizing: border-box;
+}
+nav a:hover {
+    background-color: #cc8fa6; /* tu color de hover */
+    color: #ffffff;             /* color del texto en hover */
+}
+main {
+    flex: 1;
+    padding: 20px;
+}
+</style>
+</head>
+<body>
+    <nav>
+        {% load static %}
+        <img src="{% static 'pedidos/logo.png' %}" alt="Logo Floristería">
+        <a href="{% url 'crear_pedido' %}">Crear Pedido</a>
+        <a href="{% url 'lista_pedidos' %}">Pedidos Activos</a>
+        <a href="{% url 'catalogo_productos' %}">Consultar Inventario</a>
+        <!-- Más enlaces de casos de uso si los agregas -->
+    </nav>
+
+    <main>
+        {% block content %}
+        <!-- Aquí se inyecta el contenido de cada página -->
+        {% endblock %}
+    </main>
+</body>
+</html>

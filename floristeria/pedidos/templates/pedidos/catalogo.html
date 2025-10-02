@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+{% extends 'pedidos/base.html' %}
+<head>
+    <title>{% block title %}Catálogo de Productos{% endblock %}</title>
+</head>
+{% block content %}
+<body>
+    <h1>Catálogo de Productos</h1>
+    <ul>
+        {% for producto in productos %}
+            <li>{{ producto.nombre }} - ${{ producto.precio }} - Stock: {{ producto.stock }}</li>
+        {% empty %}
+            <li>No hay productos disponibles.</li>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock %}
+</html>

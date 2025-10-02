@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+{% extends 'pedidos/base.html' %}
+<head>
+    <title>{% block title %}Actualizar Estado de Pedido{% endblock %}</title>
+</head>
+{% block content %}
+<body>
+    <h1>Actualizar Estado de Pedido</h1>
+    <p>Cliente: {{ pedido.cliente }}</p>
+    <p>Estado actual: {{ pedido.estado }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <select name="estado">
+            {% for key, value in estados %}
+                <option value="{{ key }}" {% if pedido.estado == key %}selected{% endif %}>
+                    {{ value }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Actualizar</button>
+    </form>
+</body>
+{% endblock %}
+</html>

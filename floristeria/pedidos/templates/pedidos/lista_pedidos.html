@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+{% extends 'pedidos/base.html' %}
+
+<head>
+    <title>{% block title %}Pedidos Activos{% endblock %}</title>
+</head>
+{% block content %}
+<body>
+    <h1>Pedidos Activos</h1>
+    <ul>
+        {% for pedido in pedidos %}
+            <li>{{ pedido.cliente }} - {{ pedido.estado }} - {{ pedido.fecha }}</li>
+        {% empty %}
+            <li>No hay pedidos.</li>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock %}
+</html>

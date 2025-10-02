@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    {% extends 'pedidos/base.html' %}
+<head>
+    <title>{% block title %}Crear Pedido{% endblock %}</title>
+</head>
+{% block content %}
+<body>
+    <h1>Crear Pedido</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Crear</button>
+    </form>
+</body>
+{% endblock %}
+</html>
