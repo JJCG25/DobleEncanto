@@ -1,2 +1,6 @@
 from django import forms
-from .models import Pedido
+from .models import Producto
+
+class PedidoForm(forms.Form):
+    producto = forms.ModelChoiceField(queryset=Producto.objects.all(), label="Producto")
+    cantidad = forms.IntegerField(min_value=1, initial=1, label="Cantidad")
