@@ -27,9 +27,9 @@ Doble Encanto es una aplicación web desarrollada en **Django**, que permite ges
 
 ### ✔ Reportes de Ventas
 Incluye cuatro elementos:
-- 📊 Gráfica de productos más vendidos  
-- 📈 Gráfica de ventas mensuales  
-- 🥧 Distribución porcentual por producto  
-- 🗂 Tabla resumen de ventas del mes  
+- Gráfica de productos más vendidos  
+- Gráfica de ventas mensuales  
+- Distribución porcentual por producto  
+- Tabla resumen de ventas del mes  
 Todo generado dinámicamente con **Chart.js**.
 
