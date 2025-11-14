@@ -1,0 +1,80 @@
+{% extends 'pedidos/base.html' %}
+{% block title %}Registrar Cliente{% endblock %}
+
+{% block content %}
+
+<div style="display:flex; flex-direction:column; gap:30px; align-items:center;">
+
+    <!-- Formulario -->
+    <div style="
+        background-color:#f7e1ea;
+        padding: 20px; 
+        border-radius: 12px; 
+        width: 450px; 
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    ">
+        <form method="post" style="display:flex; flex-direction:column; gap:15px;">
+            {% csrf_token %}
+
+            <label>Nombre:</label>
+            {{ form.nombre }}
+
+            <label>Teléfono:</label>
+            {{ form.telefono }}
+
+            <label>Dirección:</label>
+            {{ form.direccion }}
+
+            <label>Correo:</label>
+            {{ form.correo }}
+
+            <button type="submit" style="
+                background-color:#cc8fa6; 
+                color:white; 
+                border:none;
+                border-radius:25px; 
+                padding:10px; 
+                font-weight:bold; 
+                cursor:pointer;
+            ">Guardar Cliente</button>
+        </form>
+    </div>
+
+    <!-- Tabla -->
+    <div style="
+        background-color:#cc8fa6; 
+        padding:20px; 
+        border-radius:12px; 
+        width:80%; 
+        box-shadow:0 4px 8px rgba(0,0,0,0.1);
+    ">
+        <h2 style="text-align:center; color:white; margin-bottom:15px;">
+            Clientes Registrados
+        </h2>
+
+        <table style="width:100%; border-collapse:collapse; background-color:white;">
+            <thead style="background-color:#f7e1ea;">
+                <tr>
+                    <th style="padding:10px;">ID</th>
+                    <th style="padding:10px;">Nombre</th>
+                    <th style="padding:10px;">Teléfono</th>
+                    <th style="padding:10px;">Correo</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for c in clientes %}
+                <tr>
+                    <td style="padding:8px; text-align:center;">{{ c.id }}</td>
+                    <td style="padding:8px; text-align:center;">{{ c.nombre }}</td>
+                    <td style="padding:8px; text-align:center;">{{ c.telefono }}</td>
+                    <td style="padding:8px; text-align:center;">{{ c.correo }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -15,6 +15,17 @@
                 {% endfor %}
             </select>
 
+            <label>Cliente:</label>
+            <select name="cliente" style="padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
+                <option value="">-- Seleccione un cliente --</option>
+                {% for cliente in clientes %}
+                <option value="{{ cliente.id }}">{{ cliente.nombre }} - {{ cliente.telefono }}</option>
+                {% endfor %}
+            </select>
+            {% if error %}
+            <p style="color: red;">{{ error }}</p>
+            {% endif %}
+
             <label>Cantidad:</label>
             <input type="number" name="cantidad" value="1" min="1" style="padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
 

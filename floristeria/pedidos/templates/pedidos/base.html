@@ -47,9 +47,13 @@ main {
     <nav>
         {% load static %}
         <img src="{% static 'pedidos/logo.png' %}" alt="Logo Floristería">
-        <a href="{% url 'crear_pedido' %}">Crear Pedido</a>
-        <a href="{% url 'catalogo_productos' %}">Consultar Inventario</a>
-        <a href="{% url 'actualizar_estado' %}">Actualizar Estado Pedido</a>
+        <a href="{% url 'crear_pedido' %}">Registrar Pedido</a>
+        <a href="{% url 'catalogo_productos' %}">Consultar Catálogo</a>
+        <a href="{% url 'actualizar_estado' %}">Actualizar Estado de Pedido</a>
+        <a href="{% url 'historial_pedidos' %}">Historial de Pedidos</a>    
+        <a href="{% url 'registrar_cliente' %}">Registrar Cliente</a>
+        <a href="{% url 'reportes_ventas' %}">Reportes de Ventas</a>
+        <a href="{% url 'productos_externos' %}">Productos Externos</a>
         <!-- Más enlaces de casos de uso si los agregas -->
     </nav>
 

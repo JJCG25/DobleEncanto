@@ -1,0 +1,208 @@
+{% extends "pedidos/base.html" %}
+
+{% block title %}Reportes de Ventas{% endblock %}
+
+{% block content %}
+
+<div style="display:flex; flex-direction:column; align-items:center; width:100%;">
+
+    <h2 style="background-color:#cc8fa6; color:white; padding:8px 25px; border-radius:10px; margin-top:15px; font-size:18px;">
+        Reportes de Ventas
+    </h2>
+
+    <!-- Selector de mes -->
+    <form method="POST" style="margin-top: 10px; display:flex; align-items:center; gap:10px;">
+        {% csrf_token %}
+        <label style="font-weight:bold; font-size:15px;">Mes:</label>
+
+        <select name="mes" style="
+            padding:4px 10px;
+            border-radius:6px;
+            border:1px solid #ccc;
+            font-size:14px;">
+            {% for num, nombre in meses %}
+                <option value="{{ num }}" {% if num == mes_seleccionado %}selected{% endif %}>
+                    {{ nombre }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" style="
+            background-color:#cc8fa6; 
+            color:white; 
+            padding:6px 15px; 
+            border:none; 
+            border-radius:15px; 
+            cursor:pointer; 
+            font-weight:bold;
+            font-size:13px;">
+            Generar Reporte
+        </button>
+    </form>
+
+    <!-- CONTENEDOR DEL REPORTE -->
+    <div style="
+        margin-top:20px;
+        background-color:#cc8fa6;
+        width:80%;
+        padding:15px;
+        border-radius:12px;
+        box-shadow:0 4px 8px rgba(0,0,0,0.1);
+        overflow:hidden;">
+
+        <h3 style="text-align:center; color:white; margin-bottom:10px; font-size:17px;">
+            Resultados del Mes
+        </h3>
+
+        <!-- TABLA RESUMEN -->
+        <table style="
+            width:100%; 
+            background:white; 
+            border-collapse:collapse;
+            border-radius:10px;
+            overflow:hidden;
+            font-size:13px;">
+            <tr>
+                <th style="padding:6px; background:#f7e1ea;">Total Pedidos</th>
+                <td style="padding:6px;">{{ total_pedidos }}</td>
+            </tr>
+            <tr>
+                <th style="padding:6px; background:#f7e1ea;">Productos Vendidos</th>
+                <td style="padding:6px;">{{ total_productos }}</td>
+            </tr>
+            <tr>
+                <th style="padding:6px; background:#f7e1ea;">Total Recaudado</th>
+                <td style="padding:6px;">${{ total_recaudado }}</td>
+            </tr>
+        </table>
+
+        <!-- MINI GRID 2×2 -->
+        <div style="
+            display:grid;
+            grid-template-columns: 1fr 1fr;
+            gap:18px;
+            margin-top:20px;
+        ">
+
+            <!-- Gráfico 1 -->
+            <div style="background:white; padding:6px; border-radius:10px; height:170px;">
+                <h3 style="color:#cc8fa6; text-align:center; margin-bottom:4px; font-size:14px;">Productos Vendidos</h3>
+                <canvas id="graf1"></canvas>
+            </div>
+
+            <!-- Gráfico 2 -->
+            <div style="background:white; padding:6px; border-radius:10px; height:170px;">
+                <h3 style="color:#cc8fa6; text-align:center; margin-bottom:4px; font-size:14px;">Ventas Mensuales</h3>
+                <canvas id="graf2"></canvas>
+            </div>
+
+            <!-- Gráfico 3 -->
+            <div style="background:white; padding:6px; border-radius:10px; height:170px;">
+                <h3 style="color:#cc8fa6; text-align:center; margin-bottom:4px; font-size:14px;">Distribución</h3>
+                <canvas id="graf3"></canvas>
+            </div>
+
+            <!-- TABLA DETALLADA -->
+            <div style="background:white; padding:6px; border-radius:10px; height:170px; overflow:auto;">
+                <h3 style="color:#cc8fa6; text-align:center; font-size:14px;">Productos Vendidos</h3>
+
+                <table style="width:100%; margin-top:4px; font-size:12px;">
+                    <thead style="background:#f7e1ea;">
+                        <tr>
+                            <th style="padding:5px;">Producto</th>
+                            <th style="padding:5px;">Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in productos_vendidos %}
+                        <tr>
+                            <td style="padding:5px;">{{ p.producto__nombre }}</td>
+                            <td style="padding:5px;">{{ p.total }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" style="padding:5px; text-align:center;">Sin datos.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const labels1 = {{ labels_productos|safe }};
+    const data1 = {{ cantidades_productos|safe }};
+    const ventasMensuales = {{ ventas_mensuales|safe }};
+
+    // Forzar altura real del canvas
+    ["graf1", "graf2", "graf3"].forEach(id => {
+        const c = document.getElementById(id);
+        c.style.height = "140px";    // ← LA SOLUCIÓN REAL
+        c.style.maxHeight = "140px";
+    });
+
+    const miniOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        devicePixelRatio: 1,
+        aspectRatio: 2.5,
+        layout: {
+            padding: { top: 0, bottom: 0, left: 0, right: 0 }
+        },
+        plugins: {
+            legend: {
+                labels: { font: { size: 9 } },
+                position: "top"
+            }
+        },
+        scales: {
+            x: {
+                ticks: { font: { size: 8 } },
+                grid: { display: false }
+            },
+            y: {
+                ticks: { font: { size: 8 } },
+                grid: { display: false }
+            }
+        }
+    };
+
+    new Chart(graf1, {
+        type:"bar",
+        data:{ labels:labels1, datasets:[{ label:"Cantidad", data:data1, backgroundColor:"#cc8fa6" }]},
+        options: miniOptions
+    });
+
+    new Chart(graf2, {
+        type:"line",
+        data:{
+            labels:["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],
+            datasets:[{ label:"Pedidos", data:ventasMensuales, borderColor:"#cc8fa6", fill:false }]
+        },
+        options: miniOptions
+    });
+
+    new Chart(graf3, {
+        type:"pie",
+        data:{ labels:labels1, datasets:[{
+            data:data1,
+            backgroundColor:["#cc8fa6","#e8b8d0","#f4d6e6","#a46890","#dba7c0"]
+        }]},
+        options:{
+            responsive:true,
+            maintainAspectRatio:false,
+            devicePixelRatio:1,
+            aspectRatio:1.6,
+            layout:{ padding:0 }
+        }
+    });
+</script>
+
+
+{% endblock %}

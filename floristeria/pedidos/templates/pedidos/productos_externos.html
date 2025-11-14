@@ -1,0 +1,62 @@
+{% extends "pedidos/base.html" %}
+
+{% block title %}Productos Externos{% endblock %}
+
+{% block content %}
+<div style="display:flex; flex-direction:column; align-items:center; width:100%;">
+
+    <h2 style="background-color:#cc8fa6; color:white; padding:10px 30px; border-radius:10px; margin-top:15px;">
+        Productos Externos (Grupo Limpieza)
+    </h2>
+
+    {% if error %}
+        <div style="margin-top:20px; background:#ffe0e0; color:#a00; padding:10px 15px; border-radius:8px;">
+            {{ error }}
+        </div>
+    {% else %}
+        <div style="
+            margin-top:20px;
+            background-color:#cc8fa6;
+            width:80%;
+            padding:20px;
+            border-radius:12px;
+            box-shadow:0 4px 8px rgba(0,0,0,0.1);">
+
+            <h3 style="text-align:center; color:white; margin-bottom:15px;">
+                Catálogo del sistema externo
+            </h3>
+
+            <table style="width:100%; background:white; border-collapse:collapse; border-radius:10px; overflow:hidden;">
+                <thead style="background:#f7e1ea;">
+                    <tr>
+                        <th style="padding:8px;">Nombre</th>
+                        <th style="padding:8px;">Precio</th>
+                        <th style="padding:8px;">Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in productos_externos %}
+                    <tr>
+                        <td style="padding:8px; text-align:center;">{{ p.nombre }}</td>
+                        <td style="padding:8px; text-align:center;">
+                            {% if p.precio %}${{ p.precio }}{% else %}-{% endif %}
+                        </td>
+                        <td style="padding:8px; text-align:center;">
+                            {{ p.descripcion|default:"(Sin descripción)" }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" style="padding:10px; text-align:center;">
+                            No se recibieron productos del sistema externo.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

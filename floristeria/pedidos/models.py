@@ -4,6 +4,7 @@ class Cliente(models.Model):
     nombre = models.CharField(max_length=100)
     telefono = models.CharField(max_length=20)
     direccion = models.CharField(max_length=200)
+    correo = models.CharField(max_length=100, default="")
 
     def __str__(self):
         return self.nombre
@@ -23,7 +24,7 @@ class Pedido(models.Model):
         ('D', 'Entregado'),
     ]
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    productos = models.ManyToManyField(Producto)
+    #productos = models.ManyToManyField(Producto)
     fecha = models.DateTimeField(auto_now_add=True)
     estado = models.CharField(max_length=1, choices=ESTADOS, default='P')
 
