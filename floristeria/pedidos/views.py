@@ -201,25 +201,31 @@ def reportes_ventas(request):
         "ventas_mensuales": json.dumps(ventas_mensuales)
     })
 
-EXTERNAL_API_URL = "https://grupo-limpieza.example.com/api/productos/"
 
 def productos_externos(request):
-    productos = []
-    error = None
+    API_URL = "https://monitor-dispatched-copy-shall.trycloudflare.com/api/export/productos"
+    TOKEN = "811f4b3285cfb6b64645ddb1f4360cdecd0bfd1a3bff5fc57f6b08461bf9b7dd"
+
+    headers = {"Authorization": f"Bearer {TOKEN}"}
 
     try:
-        resp = requests.get(EXTERNAL_API_URL, timeout=5)
-        if resp.status_code == 200:
-            productos = resp.json()  # asumimos que devuelven lista de objetos JSON
-        else:
-            error = f"El servidor externo respondió con código {resp.status_code}."
-    except requests.exceptions.RequestException as e:
-        error = f"No fue posible conectar con el sistema externo: {e}"
+        response = requests.get(API_URL, headers=headers)
+        response.raise_for_status()
+
+        data = response.json()
+        productos = data.get("data", [])
+
+    except Exception as e:
+        print("ERROR:", e)
+        return render(request, "pedidos/productos_externos.html", {
+            "productos_externos": [],
+            "error": "No se pudieron obtener los productos externos."
+        })
 
     return render(request, "pedidos/productos_externos.html", {
-        "productos_externos": productos,
-        "error": error,
+        "productos_externos": productos
     })
+
 
 
 def inicio(request):
